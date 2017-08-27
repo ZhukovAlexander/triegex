@@ -3,7 +3,7 @@ import collections
 __all__ = ('Triegex',)
 
 OR = r'|'
-NOTHING = r'z^'  # well, it matches nothing https://stackoverflow.com/a/940840/2183102
+NOTHING = r'z^(?#match nothing)'  # well, it matches nothing https://stackoverflow.com/a/940840/2183102
 GROUP = r'(?:{0})'
 WORD_BOUNDARY = r'\b'
 
@@ -81,7 +81,7 @@ class Triegex(collections.MutableSet):
 
     def __contains__(self, word):
         current = self._root
-        for char in item:
+        for char in word:
             if char not in current:
                 return False
             current = current[char]
