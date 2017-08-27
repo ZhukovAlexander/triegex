@@ -1,6 +1,11 @@
 *******
 triegex
 *******
+.. image:: https://travis-ci.org/ZhukovAlexander/triegex.svg?branch=master
+    :target: https://travis-ci.org/ZhukovAlexander/triegex
+About
+######
+
 
 **triegex** is a library that builds a compact trie-structured regular expressions from a list of words.
 
