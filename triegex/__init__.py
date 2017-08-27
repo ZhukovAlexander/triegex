@@ -47,4 +47,4 @@ if __name__ == '__main__':
     triegex.add('baz')
     print(triegex.render())
     import re
-    print(re.findall(triegex.render(), 'baz spam eggs'))
+    print(re.findall(triegex.render(), 'baz spam eggsggg'))
