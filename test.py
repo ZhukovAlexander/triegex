@@ -15,7 +15,7 @@ class TriegexTest(TestCase):
 
     def test_empty_triegex_matches_nothing(self):
         t = triegex.Triegex()
-        self.assertListEqual(self.findall(t, 'foo'), [], 'Should match nothing')
+        self.assertListEqual(self.findall(t, 'foo'), [], 'Should match nothing: {}'.format(t.render()))
 
     def test_multiple_words(self):
         t = triegex.Triegex('Jon', 'Tyrion', 'Sam', 'Bran')
@@ -26,3 +26,16 @@ class TriegexTest(TestCase):
         self.assertListEqual(self.findall(t, 'Tyrion'), [])
         self.assertListEqual(self.findall(t, 'Lannister'), [])
         self.assertListEqual(self.findall(t, 'TyrionLannister'), ['TyrionLannister'])
+
+    def test_iter(self):
+        self.assertListEqual(list(triegex.Triegex('foo')), ['foo'])
+
+    def test_contains(self):
+        self.assertIn('Jaime', triegex.Triegex('Jaime', 'Lannister'))
+        self.assertNotIn('Stannis', triegex.Triegex('Kings Landing'))
+
+    def test_len(self):
+        t = triegex.Triegex()
+        self.assertEqual(len(t), 0)
+        t.add('Sansa')
+        self.assertEqual(len(t), 1)
