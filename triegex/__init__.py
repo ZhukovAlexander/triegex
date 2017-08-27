@@ -26,12 +26,12 @@ class Triegex:
 
     def add(self, word: str):
         current = self._root
-        for letter in word:
+        for letter in word[:-1]:
             current = current.childrens.setdefault(letter, TriegexNode(letter))
+        current.childrens[word[-1]] = TriegexNode(word[-1] + r'\b')
 
     def render(self):
         return self._root.render()
-
 
     def __iter__(self):
         return self
@@ -47,4 +47,4 @@ if __name__ == '__main__':
     triegex.add('baz')
     print(triegex.render())
     import re
-    print(re.findall(triegex.render(), 'baz spam eggsggg'))
+    print(re.findall(triegex.render(), 'baz spam eggsggg eggs'))
