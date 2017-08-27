@@ -1,17 +1,22 @@
 __all__ = ('Triegex',)
 
+OR = r'|'
+NOTHING = r'z^'  # well, it matches nothing https://stackoverflow.com/a/940840/2183102
+GROUP = r'(?:{0})'
+WORD_BOUNDARY = '\b'
+
 
 class TriegexNode:
 
-    def __init__(self, char: str, childrens=()):
-        self.char = char
+    def __init__(self, char: str, *childrens):
+        self.char = char if char is not None else ''
         self.childrens = {children.char: children for children in childrens}
 
     def render(self):
         if not self.childrens:
             return self.char
-        return self.char + r'(?:{0})'.format(
-            r'|'.join(
+        return self.char + GROUP.format(
+            OR.join(
                 [children.render() for key, children in sorted(self.childrens.items())]
             )
         )
@@ -19,8 +24,10 @@ class TriegexNode:
 
 class Triegex:
 
+    _root = None
+
     def __init__(self, *words):
-        self._root = TriegexNode('')
+        self._root = TriegexNode(None, TriegexNode(NOTHING))
         for word in words:
             self.add(word)
 
@@ -28,23 +35,10 @@ class Triegex:
         current = self._root
         for letter in word[:-1]:
             current = current.childrens.setdefault(letter, TriegexNode(letter))
-        current.childrens[word[-1]] = TriegexNode(word[-1] + r'\b')
+        current.childrens[word[-1]] = TriegexNode(word[-1] + WORD_BOUNDARY)
 
     def render(self):
         return self._root.render()
 
     def __iter__(self):
         return self
-
-
-
-
-
-if __name__ == '__main__':
-    triegex = Triegex('spam', 'eggs')
-    triegex.add('foo')
-    triegex.add('bar')
-    triegex.add('baz')
-    print(triegex.render())
-    import re
-    print(re.findall(triegex.render(), 'baz spam eggsggg eggs'))
