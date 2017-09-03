@@ -16,7 +16,13 @@ class TriegexNode:
         self.childrens = {children.char: children for children in childrens}
 
     def __iter__(self):
-        return iter(self.childrens.values())
+        return iter(sorted(self.childrens.values(), key=lambda x: x.char))
+
+    def __len__(self):
+        return len(self.childrens)
+
+    def __repr__(self):
+        return f'<TriegexNode: \'{self.char}\' end={self.end}>'
 
     def __contains__(self, key):
         return key in self.childrens
@@ -25,16 +31,25 @@ class TriegexNode:
         return self.childrens[key]
 
     def render(self):
-        char = self.char
-        if not self.childrens:
-            return char
-        if self.end:
-            char = self.char + WORD_BOUNDARY
-        return char + GROUP.format(
-            OR.join(
-                [children.render() for key, children in sorted(self.childrens.items())]
-            )
-        )
+        stack = [self]
+        ready = []
+        waiting = []
+
+        while stack:
+            waiting.append(stack.pop())
+            stack.extend(waiting[-1])
+
+        while waiting:
+            node = waiting.pop()
+            result = node.char
+            if len(node):
+                result += GROUP.format(OR.join(reversed(
+                    [ready.pop() for _ in node]
+                )))
+
+            ready.append(result)
+        return ready[-1]
+
 
 
 class Triegex(collections.MutableSet):
