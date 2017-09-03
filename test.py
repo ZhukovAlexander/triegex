@@ -40,3 +40,7 @@ class TriegexTest(TestCase):
         self.assertEqual(len(t), 0)
         t.add('Sansa')
         self.assertEqual(len(t), 1)
+
+    def test_optimized(self):
+        t = triegex.Triegex('Jon', 'Jorah')
+        self.assertEqual('(?:Jo(?:n|rah)|z^(?#match nothing))', t.render())

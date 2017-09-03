@@ -42,7 +42,9 @@ class TriegexNode:
         while waiting:
             node = waiting.pop()
             result = node.char
-            if len(node):
+            if len(node) == 1:
+                result += ready.pop()
+            elif len(node) > 1:
                 result += GROUP.format(OR.join(reversed(
                     [ready.pop() for _ in node]
                 )))
