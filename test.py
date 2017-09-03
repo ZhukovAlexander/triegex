@@ -18,19 +18,17 @@ class TriegexTest(TestCase):
         self.assertListEqual(self.findall(t, 'foo'), [], 'Should match nothing: {}'.format(t.render()))
 
     def test_multiple_words(self):
-        # t = triegex.Triegex('Jon', 'Tyrion', 'Sam', 'Bran')
-        t = triegex.Triegex('Jon', 'Sam')
+        t = triegex.Triegex('Jon', 'Tyrion', 'Sam', 'Bran')
         self.assertListEqual(self.findall(t, 'Jon & Sam'), ['Jon', 'Sam'])
 
     def test_word_boundary_is_handled(self):
-        t = triegex.Triegex('TyrionLannister')
-        self.assertListEqual(self.findall(t, 'Tyrion'), [])
-        self.assertListEqual(self.findall(t, 'Lannister'), [])
-        self.assertListEqual(self.findall(t, 'TyrionLannister'), ['TyrionLannister'])
+        t = triegex.Triegex('Sam')
+        self.assertListEqual([], self.findall(t, 'Samwell'))
+        self.assertListEqual(['Sam'], self.findall(t, 'Sam` Tarly'))
 
     def test_optimized(self):
         t = triegex.Triegex('Jon', 'Jorah')
-        self.assertEqual('(?:Jo(?:n|rah)|~^(?#match nothing))', t.render())
+        self.assertEqual(r'(?:Jo(?:n\b|rah\b)|~^(?#match nothing))', t.render())
 
 
 class TriegexMutableSetInterfaceTest(TestCase):

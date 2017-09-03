@@ -49,8 +49,11 @@ class TriegexNode:
             node = waiting.pop()
             result = node.char
 
+            if node.end:
+                result += WORD_BOUNDARY
+
             # if there is only one children, we can safely concatenate chars withoug nesting
-            if len(node) == 1:
+            elif len(node) == 1:
                 result += ready.pop()
 
             elif len(node) > 1:
