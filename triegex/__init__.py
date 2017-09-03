@@ -3,7 +3,10 @@ import collections
 __all__ = ('Triegex',)
 
 OR = r'|'
-NOTHING = r'z^(?#match nothing)'  # well, it matches nothing https://stackoverflow.com/a/940840/2183102
+
+# regex below matches nothing https://stackoverflow.com/a/940840/2183102. We
+# use '~' to ensure it comes last when lexicographically sorted: max(string.printable) is '~'
+NOTHING = r'~^(?#match nothing)'
 GROUP = r'(?:{0})'
 WORD_BOUNDARY = r'\b'
 
