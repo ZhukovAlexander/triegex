@@ -28,6 +28,12 @@ class TriegexTest(TestCase):
         self.assertListEqual(self.findall(t, 'Lannister'), [])
         self.assertListEqual(self.findall(t, 'TyrionLannister'), ['TyrionLannister'])
 
+    def test_optimized(self):
+        t = triegex.Triegex('Jon', 'Jorah')
+        self.assertEqual('(?:Jo(?:n|rah)|z^(?#match nothing))', t.render())
+
+
+class TriegexMutableSetInterfaceTest(TestCase):
     def test_iter(self):
         self.assertListEqual(list(triegex.Triegex('foo')), ['foo'])
 
@@ -41,6 +47,9 @@ class TriegexTest(TestCase):
         t.add('Sansa')
         self.assertEqual(len(t), 1)
 
-    def test_optimized(self):
-        t = triegex.Triegex('Jon', 'Jorah')
-        self.assertEqual('(?:Jo(?:n|rah)|z^(?#match nothing))', t.render())
+    def test_discart(self):
+        t = triegex.Triegex()
+        t.add('Hound')
+        self.assertIn('Hound', t)
+        t.discard('Hound')
+        self.assertNotIn('Hound', t)

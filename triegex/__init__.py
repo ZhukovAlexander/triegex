@@ -30,6 +30,9 @@ class TriegexNode:
     def __getitem__(self, key):
         return self.childrens[key]
 
+    def __delitem__(self, key):
+        del self.childrens[key]
+
     def render(self):
         stack = [self]
         ready = []
@@ -42,8 +45,11 @@ class TriegexNode:
         while waiting:
             node = waiting.pop()
             result = node.char
+
+            # if there is only one children, we can safely concatenate chars withoug nesting
             if len(node) == 1:
                 result += ready.pop()
+
             elif len(node) > 1:
                 result += GROUP.format(OR.join(reversed(
                     [ready.pop() for _ in node]
@@ -51,7 +57,6 @@ class TriegexNode:
 
             ready.append(result)
         return ready[-1]
-
 
 
 class Triegex(collections.MutableSet):
@@ -102,7 +107,23 @@ class Triegex(collections.MutableSet):
             if char not in current:
                 return False
             current = current[char]
-        return True
+        return True and current.end  # word has to end with the last char
 
     def discard(self, word):
-        return
+        to_delete = [self._root]
+        current = self._root
+        for char in word:
+            if char not in current:
+                return
+            current = current[char]
+            to_delete.append(current)
+        if not to_delete[-1].end:
+            return
+        while len(to_delete) > 1:
+            node = to_delete.pop()
+            if len(node) == 0:
+                del to_delete[-1][node.char]
+            return
+
+
+
