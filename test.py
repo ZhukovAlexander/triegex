@@ -7,7 +7,7 @@ import triegex
 class TriegexTest(TestCase):
 
     def findall(self, triegex, string):
-        return re.findall(triegex.render(), string)
+        return re.findall(triegex.to_regex(), string)
 
     def test_basic(self):
         t = triegex.Triegex('Jon')
@@ -15,7 +15,7 @@ class TriegexTest(TestCase):
 
     def test_empty_triegex_matches_nothing(self):
         t = triegex.Triegex()
-        self.assertListEqual(self.findall(t, 'foo'), [], 'Should match nothing: {}'.format(t.render()))
+        self.assertListEqual(self.findall(t, 'foo'), [], 'Should match nothing: {}'.format(t.to_regex()))
 
     def test_multiple_words(self):
         t = triegex.Triegex('Jon', 'Tyrion', 'Sam', 'Bran')
@@ -28,7 +28,7 @@ class TriegexTest(TestCase):
 
     def test_optimized(self):
         t = triegex.Triegex('Jon', 'Jorah')
-        self.assertEqual(r'(?:Jo(?:n\b|rah\b)|~^(?#match nothing))', t.render())
+        self.assertEqual(r'(?:Jo(?:n\b|rah\b)|~^(?#match nothing))', t.to_regex())
 
 
 class TriegexMutableSetInterfaceTest(TestCase):

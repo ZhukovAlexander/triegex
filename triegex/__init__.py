@@ -5,7 +5,8 @@ __all__ = ('Triegex',)
 OR = r'|'
 
 # regex below matches nothing https://stackoverflow.com/a/940840/2183102. We
-# use '~' to ensure it comes last when lexicographically sorted: max(string.printable) is '~'
+# use '~' to ensure it comes last when lexicographically sorted:
+# max(string.printable) is '~'
 NOTHING = r'~^(?#match nothing)'
 GROUP = r'(?:{0})'
 WORD_BOUNDARY = r'\b'
@@ -36,7 +37,7 @@ class TriegexNode:
     def __delitem__(self, key):
         del self.childrens[key]
 
-    def render(self):
+    def to_regex(self):
         stack = [self]
         ready = []
         waiting = []
@@ -52,7 +53,8 @@ class TriegexNode:
             if node.end:
                 result += WORD_BOUNDARY
 
-            # if there is only one children, we can safely concatenate chars withoug nesting
+            # if there is only one children, we can safely concatenate chars
+            # withoug nesting
             elif len(node) == 1:
                 result += ready.pop()
 
@@ -70,7 +72,9 @@ class Triegex(collections.MutableSet):
     _root = None
 
     def __init__(self, *words):
-        """"""
+        """
+        Trigex constructor.
+        """
 
         # make sure we match nothing when no words are added
         self._root = TriegexNode(None, False, TriegexNode(NOTHING, False))
@@ -81,12 +85,21 @@ class Triegex(collections.MutableSet):
     def add(self, word: str):
         current = self._root
         for letter in word[:-1]:
-            current = current.childrens.setdefault(letter, TriegexNode(letter, False))
+            current = current.childrens.setdefault(letter,
+                                                   TriegexNode(letter, False))
         # this will ensure that we correctly match the word boundary
         current.childrens[word[-1]] = TriegexNode(word[-1], True)
 
-    def render(self):
-        return self._root.render()
+    def to_regex(self):
+        r"""
+            Produce regular expression that will match each word in the
+        internal trie.
+
+        >>> t = Triegex('foo', 'bar', 'baz')
+        >>> t.to_regex()
+        '(?:ba(?:r\\b|z\\b)|foo\\b|~^(?#match nothing))'
+        """
+        return self._root.to_regex()
 
     def _traverse(self):
         stack = [self._root]
@@ -102,7 +115,8 @@ class Triegex(collections.MutableSet):
             for children in node:
                 paths[children.char] = [node.char] + paths[node.char]
                 if children.end:
-                    yield ''.join(reversed([children.char] + paths[children.char]))
+                    char = children.char
+                    yield ''.join(reversed([char] + paths[char]))
 
     def __len__(self):
         return sum(1 for _ in self.__iter__())
@@ -130,6 +144,3 @@ class Triegex(collections.MutableSet):
             if len(node) == 0:
                 del to_delete[-1][node.char]
             return
-
-
-
