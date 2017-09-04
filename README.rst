@@ -25,7 +25,7 @@ Example usage
 
     t = triegex.Triegex('foo', 'bar', 'baz')
     # render it to a regex
-    print(t.render())  # (?:b(?:a(?:r|z))|f(?:o(?:o))|z^(?#match nothing))
+    print(t.render())  # (?:ba(?:r\\b|z\\b)|foo\\b|~^(?#match nothing))
 
     t.add('spam')
     # you check if the word is in there
