@@ -21,18 +21,16 @@ Example usage
 
 .. code-block:: python
 
-    import triegex
-
-    t = triegex.Triegex('foo', 'bar', 'baz')
-    # render it to a regex
-    print(t.render())  # (?:ba(?:r\\b|z\\b)|foo\\b|~^(?#match nothing))
-
-    t.add('spam')
-    # you check if the word is in there
-    print('spam' in t)  # True
-
-    import re
-    print(re.findall(t.render(), 'spam & eggs'))  # ['spam']
+    >>> import triegex
+    >>> t = triegex.Triegex('foo', 'bar', 'baz')
+    >>> t.to_regex()  # build regular expression
+    '(?:ba(?:r\\b|z\\b)|foo\\b|~^(?#match nothing))'
+    >>> t.add('spam')
+    >>> 'spam' in t  # check if the word is in there
+    True
+    >>> import re
+    >>> re.findall(t.to_regex(), 'spam & eggs')
+    ['spam']
     
 Why?
 ####
