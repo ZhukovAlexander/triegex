@@ -22,14 +22,19 @@ Example usage
 .. code-block:: python
 
     >>> import triegex
+    >>>
     >>> t = triegex.Triegex('foo', 'bar', 'baz')
+    >>>
     >>> t.to_regex()  # build regular expression
     '(?:ba(?:r\\b|z\\b)|foo\\b|~^(?#match nothing))'
+    >>>
     >>> t.add('spam')
-    >>> 'spam' in t  # check if the word is in there
+    >>>
+    >>> 'spam' in t  # you check if the word is in there
     True
+    >>>
     >>> import re
-    >>> re.findall(t.to_regex(), 'spam & eggs')
+    >>> re.findall(t.to_regex(), 'spam & eggs')  # ['spam']
     ['spam']
     
 Why?

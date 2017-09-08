@@ -1,4 +1,3 @@
-
 language: python
 sudo: false
 python:
@@ -8,5 +7,6 @@ python:
 
 install:
   - "python setup.py install"
+  - "pip install pytest"
 
-script: python -m unittest
+script: "py.test --doctest-module --ignore=setup.py --doctest-glob='*.rst'"
