@@ -3,6 +3,7 @@ triegex
 *******
 .. image:: https://travis-ci.org/ZhukovAlexander/triegex.svg?branch=master
     :target: https://travis-ci.org/ZhukovAlexander/triegex
+
 About
 ######
 
@@ -10,14 +11,14 @@ About
 **triegex** is a library that builds a compact trie-structured regular expressions from a list of words.
 
 Installation
-########
+############
 
 .. code-block:: bash
 
     pip install git+https://github.com/ZhukovAlexander/triegex.git
     
 Example usage
-########
+#############
 
 .. code-block:: python
 
@@ -43,5 +44,4 @@ The library was inspired by a need to match a list of valid IANA top-level domai
 
 Also it's fun
 
-**triegex** was influenced by these projects: `frak <https://github.com/noprompt/frak>`_, `regex-trie <https://github.com/alexeld/regex-trie>`_ and `Regexp-Trie <http://search.cpan.org/~dankogai/Regexp-Trie-0.02/lib/Regexp/Trie.pm>`_ 
-    
+**triegex** was influenced by these projects: `frak <https://github.com/noprompt/frak>`_, `regex-trie <https://github.com/alexeld/regex-trie>`_ and `Regexp-Trie <http://search.cpan.org/~dankogai/Regexp-Trie-0.02/lib/Regexp/Trie.pm>`_
