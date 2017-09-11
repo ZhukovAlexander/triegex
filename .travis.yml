@@ -1,12 +1,21 @@
 language: python
 sudo: false
+
 python:
-  - "3.6"
-  - "3.7-dev"
-  - "nightly"
+  - 3.6
+  - 3.7-dev
+  - nightly
 
 install:
-  - "python setup.py install"
-  - "pip install pytest"
+  - python setup.py install
+  - pip install pytest
 
-script: "py.test --doctest-module --ignore=setup.py --doctest-glob='*.rst'"
+script: py.test --doctest-module --ignore=setup.py --doctest-glob='*.rst'
+
+deploy:
+  provider: pypi
+  user: dijkstra
+  password:
+    secure: cMY94zBzgfI04B5j/XKhxg7qRGCBUprZmQSiK1G90z+hodf8Ye4XbJY8ekdm+eBnvI5RPDy0GDmzCjzCa3mPOlcsYUmpPSeGSrtlH/FKoMCxZKry0MqwkzFUbgein3yB5AckAmigKt7qsPWE5lgwWlHxXh8Ng8gmmmU6SqSLghS3gNW4ow6hFkTKGzhj5OHwiQiC3WUbxjGWBLdaalipaC7izGJZOA+zAQ18xWA/KyMkki2QWdOdmVwiBdwJCxbn8JCtPnIlcUdtWGYxx9ZIQCsjWhfR/hzHTLdthEjGJketZ+cYI5KXFZEV5QTlXPJWt3mxNKaMfYjgOTdosel0D09NC2b32vTq8bG7eoYDEi4ZS4CAq4y4THBeLlkuQ659heOCq0X9eEN5Po9252GBshIdu+VmBe8zhv2TT2ARrrjKt9N4KCE3VYNzM46WODMo59qS0glHgGA4Tozab75lvgOSmth02m3sEPlJK10sTDlqFOxUrHwTGIyBcLAWuPpgbg03ExR0ktO4KCz4zXQNcFP4yQSD7Az6mys6bkxtztxwCyI6NmbBDf/8pUHOYAoI0Ruko9+4o2XkPXZLjz1UqIUeDy9NcwmVh+StJ52goOyESJ1Hpdw32ZTamUCPCn6Y1JA5zpXW7+NK8uq8OeE5aZ4CvjPEYjo64zvT1T/i074=
+  on:
+    tags: true
