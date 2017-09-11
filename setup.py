@@ -6,6 +6,9 @@ with codecs.open('README.rst', 'r', 'utf-8') as f:
 
 setup(
     name='triegex',
+    url='https://github.com/ZhukovAlexander/triegex',
+    author='Alexander Zhukov',
+    author_email='zhukovaa90@gmail.com',
     description='Trie-ized regular expressions in python',
     long_description=readme,
     keywords='python regular expressions trie',
