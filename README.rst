@@ -14,7 +14,7 @@ Installation
 
 .. code-block:: bash
 
-    pip install git+https://github.com/ZhukovAlexander/triegex.git
+    pip install triegex
     
 Example usage
 ########
