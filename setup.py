@@ -11,7 +11,7 @@ setup(
     keywords='python regular expressions trie',
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
-    py_modules=['triegex'],
+    packages=['triegex'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
