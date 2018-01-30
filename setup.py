@@ -15,6 +15,7 @@ setup(
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
     packages=['triegex'],
+    zip_safe=True,
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
