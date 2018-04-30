@@ -26,7 +26,7 @@ class TriegexNode:
         return len(self.childrens)
 
     def __repr__(self):
-        return f'<TriegexNode: \'{self.char}\' end={self.end}>'
+        return "<TriegexNode: '{0.char}' end={0.end}>".format(self)
 
     def __contains__(self, key):
         return key in self.childrens
