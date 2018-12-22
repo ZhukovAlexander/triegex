@@ -59,18 +59,14 @@ class TriegexNode:
                 result += ready.pop()
 
             elif len(node) > 1:
-                result += GROUP.format(OR.join(reversed(
-                    [ready.pop() for _ in node]
-                )))
+                result += GROUP.format(OR.join(ready))
+                ready = []
 
             ready.append(result)
         return ready[-1]
 
 
 class Triegex(collections.MutableSet):
-
-    _root = None
-
     def __init__(self, *words):
         """
         Trigex constructor.
