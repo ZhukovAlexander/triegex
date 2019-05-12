@@ -14,33 +14,33 @@ WORD_BOUNDARY = r'\b'
 
 class TriegexNode:
 
-    def __init__(self, char: str, end: bool, *childrens):
+    def __init__(self, char: str, end: bool, *children):
         self.char = char if char is not None else ''
         self.end = end
-        self.childrens = {children.char: children for children in childrens}
+        self.children = {child.char: child for child in children}
 
     def __iter__(self):
-        return iter(sorted(self.childrens.values(), key=lambda x: x.char))
+        return iter(sorted(self.children.values(), key=lambda x: x.char))
 
     def __len__(self):
-        return len(self.childrens)
+        return len(self.children)
 
     def __repr__(self):
         return "<TriegexNode: '{0.char}' end={0.end}>".format(self)
 
     def __contains__(self, key):
-        return key in self.childrens
+        return key in self.children
 
     def __getitem__(self, key):
-        return self.childrens[key]
+        return self.children[key]
 
     def __delitem__(self, key):
-        del self.childrens[key]
+        del self.children[key]
 
     def to_regex(self):
         '''
         RECURSIVE IMPLEMENTATION FOR REFERENCE
-        suffixes = [v.to_regex() for k, v in self.childrens.items()]
+        suffixes = [v.to_regex() for k, v in self.children.items()]
         if self.end:
             suffixes += [WORD_BOUNDARY]
         
@@ -60,9 +60,9 @@ class TriegexNode:
         i = 0
         j = 1
         while i < len(stack):
-            stack.extend(stack[i].childrens.values())
+            stack.extend(stack[i].children.values())
             lookup.append(j)
-            j += len(stack[i].childrens)
+            j += len(stack[i].children)
             i += 1
         
         i = len(stack)
@@ -73,7 +73,7 @@ class TriegexNode:
             i -= 1
             node = stack[i]
             # Get regexes of child nodes and make a root regex
-            suffixes = [sub_regexes[child] for child in range(lookup[i], lookup[i] + len(node.childrens))]
+            suffixes = [sub_regexes[child] for child in range(lookup[i], lookup[i] + len(node.children))]
             if node.end:
                 # if the node is an ending node we add a \b character
                 suffixes += [WORD_BOUNDARY]
@@ -102,13 +102,13 @@ class Triegex(collections.MutableSet):
     def add(self, word: str):
         current = self._root
         for letter in word[:-1]:
-            current = current.childrens.setdefault(letter,
+            current = current.children.setdefault(letter,
                                                    TriegexNode(letter, False))
         # this will ensure that we correctly match the word boundary
-        if word[-1] in current.childrens:
-            current.childrens[word[-1]].end = True
+        if word[-1] in current.children:
+            current.children[word[-1]].end = True
         else:
-            current.childrens[word[-1]] = TriegexNode(word[-1], True)
+            current.children[word[-1]] = TriegexNode(word[-1], True)
 
     def to_regex(self):
         r"""
@@ -127,15 +127,15 @@ class Triegex(collections.MutableSet):
         while stack:
             yield current
             current = stack.pop()
-            stack.extend(current.childrens.values())
+            stack.extend(current.children.values())
 
     def __iter__(self):
         paths = {self._root.char: []}
         for node in self._traverse():
-            for children in node:
-                paths[children.char] = [node.char] + paths[node.char]
-                if children.end:
-                    char = children.char
+            for child in node:
+                paths[child.char] = [node.char] + paths[node.char]
+                if child.end:
+                    char = child.char
                     yield ''.join(reversed([char] + paths[char]))
 
     def __len__(self):
