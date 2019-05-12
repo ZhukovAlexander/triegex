@@ -28,7 +28,7 @@ class TriegexTest(TestCase):
 
     def test_optimized(self):
         t = triegex.Triegex('Jon', 'Jorah')
-        self.assertEqual(r'(?:Jo(?:n\b|rah\b)|~^(?#match nothing))', t.to_regex())
+        self.assertEqual(r'(?:~^(?#match nothing)|Jo(?:n\b|rah\b))', t.to_regex())
 
 
 class TriegexMutableSetInterfaceTest(TestCase):

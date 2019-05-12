@@ -38,32 +38,53 @@ class TriegexNode:
         del self.childrens[key]
 
     def to_regex(self):
+        '''
+        RECURSIVE IMPLEMENTATION FOR REFERENCE
+        suffixes = [v.to_regex() for k, v in self.childrens.items()]
+        if self.end:
+            suffixes += [WORD_BOUNDARY]
+        
+        if len(suffixes) > 1:
+            return self.char + GROUP.format(OR.join(suffixes))
+        elif len(suffixes) == 1:
+            return self.char + suffixes[0]
+        else:
+            return self.char
+        '''
+        
         stack = [self]
-        ready = []
-        waiting = []
+        # marks starting indices of children of a node
+        lookup = []
 
-        while stack:
-            waiting.append(stack.pop())
-            stack.extend(waiting[-1])
-
-        while waiting:
-            node = waiting.pop()
-            result = node.char
-
+        # Creates an ordered list of nodes starting with root and ending with leaves by using BFS
+        i = 0
+        j = 1
+        while i < len(stack):
+            stack.extend(stack[i].childrens.values())
+            lookup.append(j)
+            j += len(stack[i].childrens)
+            i += 1
+        
+        i = len(stack)
+        # temp value array
+        sub_regexes = [None] * i
+        while i > 0:
+            # We start with leaves and end at root thus we decrement
+            i -= 1
+            node = stack[i]
+            # Get regexes of child nodes and make a root regex
+            suffixes = [sub_regexes[child] for child in range(lookup[i], lookup[i] + len(node.childrens))]
             if node.end:
-                result += WORD_BOUNDARY
-
-            # if there is only one children, we can safely concatenate chars
-            # withoug nesting
-            elif len(node) == 1:
-                result += ready.pop()
-
-            elif len(node) > 1:
-                result += GROUP.format(OR.join(ready))
-                ready = []
-
-            ready.append(result)
-        return ready[-1]
+                # if the node is an ending node we add a \b character
+                suffixes += [WORD_BOUNDARY]
+            if len(suffixes) > 1:
+                sub_regexes[i] = node.char + GROUP.format(OR.join(suffixes))
+            elif len(suffixes) == 1:
+                sub_regexes[i] = node.char + suffixes[0]
+            else:
+                sub_regexes[i] = node.char
+        # return the top Regex
+        return sub_regexes[0]
 
 
 class Triegex(collections.MutableSet):
@@ -84,7 +105,10 @@ class Triegex(collections.MutableSet):
             current = current.childrens.setdefault(letter,
                                                    TriegexNode(letter, False))
         # this will ensure that we correctly match the word boundary
-        current.childrens[word[-1]] = TriegexNode(word[-1], True)
+        if word[-1] in current.childrens:
+            current.childrens[word[-1]].end = True
+        else:
+            current.childrens[word[-1]] = TriegexNode(word[-1], True)
 
     def to_regex(self):
         r"""
