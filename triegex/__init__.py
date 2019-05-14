@@ -77,6 +77,9 @@ class TriegexNode:
             if node.end:
                 # if the node is an ending node we add a \b character
                 suffixes += [WORD_BOUNDARY]
+            # If we arrive at the root node we have to add the NOTHING expression
+            if i == 0:
+                suffixes += [NOTHING]
             if len(suffixes) > 1:
                 sub_regexes[i] = node.char + GROUP.format(OR.join(suffixes))
             elif len(suffixes) == 1:
@@ -93,8 +96,7 @@ class Triegex(collections.MutableSet):
         Trigex constructor.
         """
 
-        # make sure we match nothing when no words are added
-        self._root = TriegexNode(None, False, TriegexNode(NOTHING, False))
+        self._root = TriegexNode(None, False)
 
         for word in words:
             self.add(word)
@@ -102,8 +104,11 @@ class Triegex(collections.MutableSet):
     def add(self, word: str):
         current = self._root
         for letter in word[:-1]:
-            current = current.children.setdefault(letter,
-                                                   TriegexNode(letter, False))
+            if letter in current.children:
+                current = current.children[letter]
+            else:
+                current = current.children.setdefault(letter,
+                                                      TriegexNode(letter, False))
         # this will ensure that we correctly match the word boundary
         if word[-1] in current.children:
             current.children[word[-1]].end = True
