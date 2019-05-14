@@ -40,7 +40,7 @@ class TriegexNode:
     def to_regex(self):
         '''
         RECURSIVE IMPLEMENTATION FOR REFERENCE
-        suffixes = [v.to_regex() for k, v in self.children.items()]
+        suffixes = reversed([v.to_regex() for k, v in self.children.items()])
         if self.end:
             suffixes += [WORD_BOUNDARY]
         
@@ -73,7 +73,8 @@ class TriegexNode:
             i -= 1
             node = stack[i]
             # Get regexes of child nodes and make a root regex
-            suffixes = [sub_regexes[child] for child in range(lookup[i], lookup[i] + len(node.children))]
+            # Iterate backwards because otherwise alphabetical ordering is incorrect
+            suffixes = [sub_regexes[lookup[i] + len(node.children) - 1 - child] for child in range(0, len(node.children))]
             if node.end:
                 # if the node is an ending node we add a \b character
                 suffixes += [WORD_BOUNDARY]
