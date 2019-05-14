@@ -60,7 +60,7 @@ class TriegexNode:
         i = 0
         j = 1
         while i < len(stack):
-            stack.extend(stack[i].children.values())
+            stack.extend(sorted(stack[i].children.values(), key=lambda node: node.char))
             lookup.append(j)
             j += len(stack[i].children)
             i += 1
