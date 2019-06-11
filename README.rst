@@ -16,6 +16,13 @@ Installation
 
     pip install triegex
     
+Alternatively, you can install the latest release directly from git:
+
+.. code-block:: bash
+
+    pip install git+https://github.com/ZhukovAlexander/triegex.git@0.0.4
+    
+
 Example usage
 ########
 
